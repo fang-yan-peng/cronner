@@ -1,0 +1,47 @@
+<div class="index-content">
+    <section class="content-header">
+        <h4 data-lang="sidebar-history-status"></h4>
+        <ol class="breadcrumb">
+            <li class="active"><i class="fa fa-history" data-lang="sidebar-job-monitor"></i></li>
+            <li class="active" data-lang="sidebar-job-trace"></li>
+        </ol>
+    </section>
+    <section class="content">
+        <div id="jobExecStatusToolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group toolbar">
+                    <label for="job-name" data-lang="job-name"></label>
+                    <input type="text" class="form-control" id="job-name" placeholder="">
+                </div>
+                <div class="form-group toolbar">
+                    <label for="start-time" data-lang="creation-start-time"></label>
+                    <input type="text" class="form-control pull-right custom-datepicker" id="start-time">
+                </div>
+                <div class="form-group toolbar">
+                    <label for="end-time" data-lang="creation-end-time"></label>
+                    <input type="text" class="form-control pull-right custom-datepicker" id="end-time">
+                </div>
+            </div>
+        </div>
+        <table id="job-exec-status-table">
+            <thead>
+                <tr>
+                    <th data-field="id"><span data-lang="task-id"></span></th>
+                    <th data-field="jobId"><span data-lang="job-id"></span></th>
+                    <th data-field="jobName"><span data-lang="job-name"></span></th>
+                    <th data-field="shardItems"><span data-lang="job-sharding-item"></span></th>
+                    <th data-field="createTime"><span data-lang="creation-time"></span></th>
+                    <th data-field="operation" data-formatter="generateOperationButtons"><span data-lang="operation"></span></th>
+                </tr>
+            </thead>
+        </table>
+    </section>
+</div>
+<script src="/lib/bootstrap-table/bootstrap-table.js"></script>
+<script src="/lib/daterangepicker/moment.min.js"></script>
+<script src="/lib/daterangepicker/daterangepicker.js"></script>
+<script src="/lib/input-mask/jquery.inputmask.js"></script>
+<script src="/lib/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="/lib/input-mask/jquery.inputmask.extensions.js"></script>
+<script src="/js/util/formatter.js"></script>
+<script src="/js/history/job_status_history.js"></script>

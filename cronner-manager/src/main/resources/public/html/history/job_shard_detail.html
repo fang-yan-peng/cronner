@@ -1,0 +1,49 @@
+<div class="index-content">
+    <section class="content-header">
+        <h4><span data-lang="task-id"></span>:<span id="task-id"></span></h4>
+        <ol class="breadcrumb">
+            <li class="active"><i class="fa fa-tasks" data-lang="sidebar-job-monitor"></i></li>
+            <li><a href="#" id="breadcrumb-job" data-lang="sidebar-job-trace"></a></li>
+            <li class="active" data-lang="operation-view-shard"></li>
+        </ol>
+    </section>
+    <section class="content">
+        <table id="sharding-cronner" data-pagination="true" data-page-list="[10, 20, 50, 100]" data-search="true" data-show-refresh="true" data-show-toggle="true" data-striped="true">
+            <thead>
+            <tr>
+                <th data-field="jobName" data-sortable="true"><span data-lang="job-name"></span></th>
+                <th data-field="ip" data-sortable="true"><span data-lang="server-ip"></span></th>
+                <th data-field="shardItems"><span data-lang="job-sharding-item"></span></th>
+                <th data-field="source" data-formatter="sourceFormatter"><span data-lang="execute-source"></span></th>
+                <th data-field="status" data-sortable="true" data-formatter="statusFormatter"><span data-lang="execute-result"></span></th>
+                <th data-field="startTime" data-sortable="true" ><span data-lang="start-time"></span></th>
+                <th data-field="completeTime" data-sortable="true" ><span data-lang="complete-time"></span></th>
+                <th data-field="failureCause" data-formatter="splitFailReasonFormatter"><span data-lang="failure-reason"></span></th>
+            </tr>
+            </thead>
+        </table>
+    </section>
+</div>
+
+<div id="view-fail-cause" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close-view-fail-cause-form" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-lang="add-job-config"></h4>
+            </div>
+            <form id="view-fail-cause-form">
+                <div class="modal-body">
+                    <label for="job-fail-cause" class="col-sm-2 control-label" data-lang="job-fail-cause"></label>
+                    <div class="col-sm-9">
+                        <textarea id="job-fail-cause" name="failCause" class="form-control"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/bootstrap-table/bootstrap-table.js"></script>
+<script src="/js/util/common.js"></script>
+<script src="/js/history/job_shard_detail.js"></script>

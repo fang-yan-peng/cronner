@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:cronner="http://cronner.jfaster.org/schema/cronner"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://cronner.jfaster.org/schema/cronner
+                        http://cronner.jfaster.org/schema/cronner/cronner.xsd
+                        ">
+
+    <context:component-scan base-package="cronner.jfaster.org.example" />
+
+    <context:annotation-config/>
+
+    <!--zookeeper配置-->
+    <cronner:zookeeper server-lists="127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183" namespace="cronner" base-sleep-time-milliseconds="1000" max-sleep-time-milliseconds="3000" max-retries="3"/>
+
+    <!--cronner扫描包配置-->
+    <cronner:job-scan package="cronner.jfaster.org.example.job"/>
+
+</beans>

@@ -1,0 +1,73 @@
+########### Spring Boot Configuration Start ###########
+
+server:
+  # the server port
+  address: 0.0.0.0
+  port: 8110
+
+
+logging:
+  # logback file location
+  config: classpath:logback.xml
+
+########### Spring Boot Configuration End ###########
+
+
+########### Cronner Configuration Start ###########
+cronner:
+
+  # cronner-manager user, default is root
+  user: root
+
+  # cronner-manager password, default is root
+  pass: 123456
+
+########### Cronner Configuration End ###########
+
+########### Mango Configuration Start ###########
+mango:
+
+  # mango package to scan
+  scanPackage: cronner.jfaster.org.dao
+
+  # mango datasource factory class
+  factoryClass: cronner.jfaster.org.factory.CronnerDatasourceFactory
+
+########### Mango Configuration End ###########
+
+########### Datasource Configuration Start ###########
+datasource:
+
+  driver: com.mysql.jdbc.Driver
+
+  url: jdbc:mysql://127.0.0.1:3306/cronner?useUnicode=true&amp;characterEncoding=utf-8
+
+  user: root
+
+  password: 272777475
+
+  maximumPoolSize: 50
+
+  connectionTimeout: 3000
+
+  autoCommit: true
+
+########### Datasource Configuration End ###########
+
+
+########### Zookeeper Configuration Start ###########
+zookeeper:
+
+  serverLists: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
+
+  namespace: cronner
+
+  baseSleepTimeMilliseconds: 1000
+
+  maxSleepTimeMilliseconds: 3000
+
+  maxRetries: 3
+
+############ Zookeeper Configuration End ###########
+
+

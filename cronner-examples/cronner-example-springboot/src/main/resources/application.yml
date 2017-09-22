@@ -1,0 +1,22 @@
+########### Zookeeper Configuration Start ###########
+zookeeper:
+
+  serverLists: 127.0.0.1:2181,127.0.0.1:2182,127.0.0.1:2183
+
+  namespace: cronner
+
+  baseSleepTimeMilliseconds: 1000
+
+  maxSleepTimeMilliseconds: 3000
+
+  maxRetries: 3
+
+############ Zookeeper Configuration End ###########
+
+########### cronner packege Configuration Start ###########
+
+cronner:
+
+  package: cronner.jfaster.org.example.job
+
+############ cronner packege Configuration End ###########

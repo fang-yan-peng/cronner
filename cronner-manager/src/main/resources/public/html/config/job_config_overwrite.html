@@ -1,0 +1,126 @@
+<div class="index-content">
+    <section class="content-header">
+        <h4 data-lang="sidebar-settings-manager"></h4>
+        <ol class="breadcrumb">
+            <li class="active"><i class="fa fa-cogs" data-lang="sidebar-job-settings"></i></li>
+            <li class="active" data-lang="sidebar-settings-manager"></li>
+        </ol>
+    </section>
+    <section class="content">
+        <div id="jobNameToolbar">
+            <div class="form-inline" role="form">
+                <div class="form-group toolbar">
+                    <label for="job-name" data-lang="job-name"></label>
+                    <input type="text" class="form-control" id="job-name-submit" placeholder="">
+                </div>
+            </div>
+        </div>
+        <table id="job-configs">
+            <thead>
+            <tr>
+                <th data-field="jobName" data-sortable="true"><span data-lang="job-name"></span></th>
+                <th data-field="cron" ><span data-lang="job-cron"></span></th>
+                <th data-field="shardingTotalCount"><span data-lang="job-sharding-total-count"></span></th>
+                <th data-field="status" data-formatter="boolFormatter"><span data-lang="job-status"></span></th>
+                <th data-field="type" data-formatter="typeFormatter"><span data-lang="job-type"></span></th>
+                <th data-field="lastSuccessTime"><span data-lang="last-success-time"></span></th>
+                <th data-field="nextExecuteTime"><span data-lang="next-execute-time"></span></th>
+                <th data-field="operation" data-formatter="generateOperationButtons"><span data-lang="operation"></span></th>
+            </tr>
+            </thead>
+        </table>
+        <button type="button" class="btn-xs btn-success" data-toggle="modal" id="add-job" data-lang="operation-add"></button>
+    </section>
+</div>
+
+<div id="add-job-config" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" id="close-add-job-form" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" data-lang="add-job-config"></h4>
+            </div>
+            <form id="reg-job-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="job-name" class="control-label" data-lang="job-name"></label>
+                        <input type="text" class="form-control" id="job-name" name="jobName" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-cron" class="control-label" data-lang="job-cron"></label>
+                        <input type="text" class="form-control" id="job-cron" name="cron" placeholder="*/5 * * * * ?" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-sharding-total-count" class="control-label" data-lang="job-sharding-total-count"></label>
+                        <input type="number" class="form-control" id="job-sharding-total-count" name="shardingTotalCount" placeholder="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-sharding-item-parameters" class="control-label" data-lang="job-sharding-item-parameters"></label>
+                        <input type="text" class="form-control" id="job-sharding-item-parameters" name="shardingParameter" placeholder="0=apple,1=orange" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-parameter" class="control-label" data-lang="job-parameter"></label>
+                        <input type="text" class="form-control" id="job-parameter" name="jobParameter">
+                    </div>
+                    <div class="form-group">
+                        <label for="job-reconcile-interval-minutes" class="control-label" data-lang="job-reconcile-interval-minutes"></label>
+                        <input type="number" class="form-control" id="job-reconcile-interval-minutes" name="reconcileIntervalMinutes" value="5"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" data-lang="job-type"></label>
+                        <select id="job-type" name="type" class="form-control" data-live-search="false">
+                            <option value="0" selected>SimpleJob</option>
+                            <option value="1">DataFlow</option>
+                            <option value="2">Script</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-failover" class="control-label" data-lang="job-failover"></label>
+                        <input type="checkbox" data-toggle="tooltip" data-placement="bottom" id="job-failover" name="failover" checked/>
+                    </div>
+                    <div class="form-group">
+                        <label for="allow-send-job-event" class="control-label" data-lang="allow-send-job-event"></label>
+                        <input type="checkbox" data-toggle="tooltip" data-placement="bottom" id="allow-send-job-event" name="allowSendJobEvent" checked/>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-misfire" class="job-misfire" data-lang="job-misfire"></label>
+                        <input type="checkbox" data-toggle="tooltip" data-placement="bottom" id="job-misfire" name="misfire" checked/>
+                    </div>
+                    <div class="form-group">
+                        <label for="job-monitor-execution" class="control-label" data-lang="job-monitor-execution"></label>
+                        <input type="checkbox" data-toggle="tooltip" data-placement="bottom" id="job-monitor-execution" name="monitorExecution" checked/>
+                    </div>
+                    <div class="form-group">
+                        <label for="streaming-process" class="control-label" data-lang="job-streaming-process"></label>
+                        <input type="checkbox" data-toggle="tooltip" data-placement="bottom" id="streaming-process" name="streamingProcess" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="add-job-config-btn" type="submit" class="btn-xs btn-primary" data-lang="operation-submit"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="data-update-job" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="update-model-size">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h2 class="modal-title" data-lang="update-config"></h2>
+                    <div id="job-overviews-name" hidden="hidden"></div>
+                </div>
+                <div class="modal-body" id="update-job-config-body">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/bootstrap-table/bootstrap-table.js"></script>
+<script src="/lib/BootstrapValidator/js/bootstrapValidator.js"></script>
+<script src="/lib/BootstrapValidator/js/bootstrapValidator_zh_CN.js"></script>
+<script src="/js/util/common.js"></script>
+<script src="/js/config/job_config_overwrite.js"></script>
