@@ -4,6 +4,7 @@
 .settings/
 target/
 dependency-reduced-pom.xml
+cronner.logPath_IS_UNDEFINED
 .DS_Store
 **/*.iml
 *.class
