@@ -286,7 +286,7 @@ Cronner 是一个分布式定时任务框架，支持作业分片、失效转移
 
 ![Image text](https://raw.githubusercontent.com/fang-yan-peng/cronner/master/cronner-add.jpeg)
 
-添加作业要主要作业名称要与执行节点的作业的名称一致才能调度。
+添加作业的名称要与执行节点的作业名称一致才能调度。
 
 # 作业配置说明
 

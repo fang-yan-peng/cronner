@@ -290,3 +290,28 @@ java.lang.NoSuchMethodError: ch.qos.logback.classic.LoggerContext.removeObject(L
 2017-09-22 17:44:13,460 [http-nio-0.0.0.0-8110-exec-1] INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring FrameworkServlet 'dispatcherServlet'
 2017-09-22 17:44:13,461 [http-nio-0.0.0.0-8110-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization started
 2017-09-22 17:44:13,475 [http-nio-0.0.0.0-8110-exec-1] INFO  org.springframework.web.servlet.DispatcherServlet - FrameworkServlet 'dispatcherServlet': initialization completed in 14 ms
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-dataflow-job] INFO  cronner.jfaster.org.job.schedule.JobShutdownHookPlugin - Shutting down Quartz...
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-simple-job] INFO  cronner.jfaster.org.job.schedule.JobShutdownHookPlugin - Shutting down Quartz...
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-dataflow-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-dataflow-job_$_NON_CLUSTERED shutting down.
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-simple-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-simple-job_$_NON_CLUSTERED shutting down.
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-dataflow-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-dataflow-job_$_NON_CLUSTERED paused.
+2017-09-22 18:07:20,012 [Quartz Shutdown-Hook cronner-simple-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-simple-job_$_NON_CLUSTERED paused.
+2017-09-22 18:07:20,013 [Thread-5] INFO  o.s.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext - Closing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@265adfad: startup date [Fri Sep 22 17:43:50 CST 2017]; root of context hierarchy
+2017-09-22 18:07:20,018 [Thread-5] WARN  o.s.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext - Exception thrown from ApplicationListener handling ContextClosedEvent
+java.lang.NoSuchMethodError: ch.qos.logback.classic.LoggerContext.removeObject(Ljava/lang/String;)V
+	at org.springframework.boot.logging.logback.LogbackLoggingSystem.markAsUninitialized(LogbackLoggingSystem.java:308) ~[spring-boot-1.5.6.RELEASE.jar:1.5.6.RELEASE]
+	at org.springframework.boot.logging.logback.LogbackLoggingSystem.cleanUp(LogbackLoggingSystem.java:198) ~[spring-boot-1.5.6.RELEASE.jar:1.5.6.RELEASE]
+	at org.springframework.boot.logging.LoggingApplicationListener.onContextClosedEvent(LoggingApplicationListener.java:252) ~[spring-boot-1.5.6.RELEASE.jar:1.5.6.RELEASE]
+	at org.springframework.boot.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:220) ~[spring-boot-1.5.6.RELEASE.jar:1.5.6.RELEASE]
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:167) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:393) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:347) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext.doClose(AbstractApplicationContext.java:991) ~[spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+	at org.springframework.context.support.AbstractApplicationContext$2.run(AbstractApplicationContext.java:929) [spring-context-4.3.10.RELEASE.jar:4.3.10.RELEASE]
+2017-09-22 18:07:20,019 [Thread-5] INFO  org.springframework.jmx.export.annotation.AnnotationMBeanExporter - Unregistering JMX-exposed beans on shutdown
+2017-09-22 18:07:20,124 [Quartz Shutdown-Hook cronner-simple-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-simple-job_$_NON_CLUSTERED shutdown complete.
+2017-09-22 18:07:20,405 [Quartz Shutdown-Hook cronner-dataflow-job] INFO  org.quartz.core.QuartzScheduler - Scheduler cronner-dataflow-job_$_NON_CLUSTERED shutdown complete.
+2017-09-22 18:07:20,528 [Curator-Framework-0] INFO  org.apache.curator.framework.imps.CuratorFrameworkImpl - backgroundOperationsLoop exiting
+2017-09-22 18:07:20,530 [Thread-5] INFO  org.apache.zookeeper.ZooKeeper - Session: 0x15ea8f6db210000 closed
+2017-09-22 18:07:20,530 [main-EventThread] INFO  org.apache.zookeeper.ClientCnxn - EventThread shut down
