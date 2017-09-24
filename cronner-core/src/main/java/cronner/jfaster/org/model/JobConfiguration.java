@@ -34,9 +34,9 @@ public class JobConfiguration {
 
     boolean monitorExecution;
 
-    Integer reconcileIntervalMinutes;
+    int reconcileIntervalMinutes;
 
-    Integer type;
+    int type;
 
     boolean streamingProcess;
 

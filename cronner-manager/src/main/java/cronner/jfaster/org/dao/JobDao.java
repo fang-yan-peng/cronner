@@ -24,7 +24,7 @@ public interface JobDao {
 
     String SELECT_BRIEF_COLS="jobName,cron,shardingTotalCount,status,type,lastSuccessTime,nextExecuteTime";
 
-    String SELECT_LOAD_COLS="id,jobName,cron,shardingTotalCount,status,shardingParameter,jobParameter,failover,allowSendJobEvent,misfire,monitorExecution,reconcileIntervalMinutes,streamingProcess";
+    String SELECT_LOAD_COLS="id,jobName,cron,shardingTotalCount,status,shardingParameter,jobParameter,failover,allowSendJobEvent,misfire,monitorExecution,reconcileIntervalMinutes,type,streamingProcess";
 
     String INSERT_COLS="jobName,cron,shardingTotalCount,shardingParameter,jobParameter,jobShardingStrategyClass,failover,allowSendJobEvent,misfire,monitorExecution,description,status,reconcileIntervalMinutes,type,streamingProcess,createTime,updateTime,lastSuccessTime,nextExecuteTime";
 

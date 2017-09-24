@@ -41,7 +41,7 @@ public class JobConfig {
 
     Boolean status;
 
-    Integer reconcileIntervalMinutes;
+    int reconcileIntervalMinutes;
 
     int type;
 

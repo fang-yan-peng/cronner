@@ -41,7 +41,7 @@ public final class ExecutionService {
         JobRegistry.getInstance().setJobRunning(jobName, true);
         for(Map.Entry<Integer,Integer> itemTaskId : shardingContexts.getShardingItemTaskIds().entrySet()){
             String taskId = Joiner.on(",").join(shardingContexts.getTaskId(),itemTaskId.getValue());
-            jobNodeStorage.updateJobNode(ShardingNode.getTaskNode(itemTaskId.getKey()),taskId);
+            jobNodeStorage.replaceJobNode(ShardingNode.getTaskNode(itemTaskId.getKey()),taskId);
         }
         if (!configService.load(true).isMonitorExecution()) {
             return;

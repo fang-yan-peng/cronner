@@ -40,7 +40,7 @@ datasource:
 
   driver: com.mysql.jdbc.Driver
 
-  url: jdbc:mysql://127.0.0.1:3306/cronner?useUnicode=true&amp;characterEncoding=utf-8
+  url: "jdbc:mysql://127.0.0.1:3306/cronner?useUnicode=true&amp;characterEncoding=utf-8"
 
   user: root
 
