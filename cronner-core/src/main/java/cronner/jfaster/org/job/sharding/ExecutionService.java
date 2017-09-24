@@ -58,9 +58,9 @@ public final class ExecutionService {
      */
     public void registerJobCompleted(final ShardingContexts shardingContexts) {
         JobRegistry.getInstance().setJobRunning(jobName, false);
-        for(int each : shardingContexts.getShardingItemTaskIds().keySet()){
+        /*for(int each : shardingContexts.getShardingItemTaskIds().keySet()){
             jobNodeStorage.updateJobNode(ShardingNode.getTaskNode(each),"");
-        }
+        }*/
         if (!configService.load(true).isMonitorExecution()) {
             return;
         }
