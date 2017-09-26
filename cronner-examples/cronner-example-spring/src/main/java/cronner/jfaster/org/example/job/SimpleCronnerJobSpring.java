@@ -17,7 +17,7 @@ public class SimpleCronnerJobSpring implements SimpleJob {
         System.out.println(String.format("jobName=%s,jobParameter=%s,shardingItem=%s,shardingParameter=%s",shardingContext.getJobName(),shardingContext.getJobParameter(),shardingContext.getShardingItem(),shardingContext.getShardingParameter()));
 
         //模拟job执行时间
-        int i = 1/0;
+        int i = 1;
         while(i <= 20) {
             ++i;
             try {
