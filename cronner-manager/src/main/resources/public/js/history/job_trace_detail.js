@@ -62,7 +62,7 @@ function stateFormatter(value) {
         case 1:
             return "<span class='label label-primary' data-lang='status-running'></span>";
         case 3:
-            return "<span class='label label-danger' data-lang='status-task-error'></span>";
+            return "<span class='label label-danger' data-lang='status-task-failed'></span>";
         default:
             return "-";
     }

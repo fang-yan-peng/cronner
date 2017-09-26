@@ -47,6 +47,8 @@ public final class JobStatusTraceEvent implements JobEvent {
         currentIp = IpUtils.getIp();
         if(state == State.TASK_RUNNING){
             createTime = DateUtil.addSecond(new Date(),1);
+        }else if(state == State.TASK_ERROR || state == State.TASK_FINISHED){
+            createTime = DateUtil.addSecond(new Date(),2);
         }else {
             createTime = new Date();
         }
