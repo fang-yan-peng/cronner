@@ -1,5 +1,6 @@
 package cronner.jfaster.org.api;
 
+import com.google.common.base.Joiner;
 import cronner.jfaster.org.constants.CronnerConstant;
 import cronner.jfaster.org.enums.JobStatus;
 import cronner.jfaster.org.executor.JobCompleteHandler;
@@ -21,6 +22,7 @@ import cronner.jfaster.org.service.JobService;
 import cronner.jfaster.org.service.TaskService;
 import cronner.jfaster.org.util.BeanConfigCopyUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.util.Strings;
 import org.jfaster.mango.transaction.TransactionAction;
 import org.jfaster.mango.transaction.TransactionStatus;
 import org.jfaster.mango.transaction.TransactionTemplate;
@@ -61,9 +63,23 @@ public class JobApi {
 
     @RequestMapping(value = "/add",method = RequestMethod.PUT)
     public JsonResponse addJob(@RequestBody final JobConfig config){
+        //判断cron和dependency
+        if(Strings.isNullOrEmpty(config.getDependency()) && Strings.isNullOrEmpty(config.getCron())){
+            return JsonResponse.notOk("Dependency or cron need to be configured,and only one be configured.");
+        }else if(!Strings.isNullOrEmpty(config.getDependency()) && !Strings.isNullOrEmpty(config.getCron())){
+            return JsonResponse.notOk("Dependency and cron only one can be configured");
+        }
+        //检查作业是否存在
         JobConfig existJob = jobService.getJobByName(config.getJobName());
         if(existJob != null){
-            return JsonResponse.notOk(String.format("%s is exist",config.getJobName()));
+            return JsonResponse.notOk(String.format("'%s' is exist",config.getJobName()));
+        }
+        //检查依赖的作业是否存在
+        if(!Strings.isNullOrEmpty(config.getDependency())){
+            existJob = jobService.getJobByName(config.getDependency());
+            if(existJob == null){
+                return JsonResponse.notOk("Dependency job not exists!");
+            }
         }
         final JobConfiguration configuration = BeanConfigCopyUtil.copy(JobConfiguration.class,config,JobConfig.class);
         Date now = new Date();
@@ -113,6 +129,19 @@ public class JobApi {
     @RequestMapping(value = "/update",method = RequestMethod.PUT)
     public JsonResponse updateJob(@RequestBody final JobConfig config){
         try {
+            //判断cron和dependency
+            if(Strings.isNullOrEmpty(config.getDependency()) && Strings.isNullOrEmpty(config.getCron())){
+                return JsonResponse.notOk("Dependency or cron need to be configured,and only one be configured.");
+            }else if(!Strings.isNullOrEmpty(config.getDependency()) && !Strings.isNullOrEmpty(config.getCron())){
+                return JsonResponse.notOk("Dependency and cron only one can be configured");
+            }
+            //查依赖的作业是否存在
+            if(!Strings.isNullOrEmpty(config.getDependency())){
+                JobConfig existJob = jobService.getJobByName(config.getDependency());
+                if(existJob == null){
+                    return JsonResponse.notOk("Dependency job not exists!");
+                }
+            }
             ConfigurationService configurationService = new ConfigurationService(registryCenter,config.getJobName());
             configurationService.update(BeanConfigCopyUtil.copy(JobConfiguration.class,config,JobConfig.class));
             config.setUpdateTime(new Date());
@@ -165,6 +194,11 @@ public class JobApi {
     @RequestMapping(value = "/shutdown",method = RequestMethod.POST)
     public JsonResponse shutdownJob(@RequestParam final String jobName){
         try {
+            //关闭一个作业，必须保证没有其它作业的依赖
+            List<String> jobNames = jobService.getJobsByDep(jobName);
+            if(jobNames !=null && !jobNames.isEmpty()){
+                return JsonResponse.notOk(String.format("Job '%s' can not be deleted,because '%s' depend on it",jobName,Joiner.on(",").join(jobNames)));
+            }
             OperationService operationService = new OperationService(registryCenter,jobName);
             operationService.operation(InstanceOperation.SHUTDOWN);
             jobService.deleteJob(jobName);

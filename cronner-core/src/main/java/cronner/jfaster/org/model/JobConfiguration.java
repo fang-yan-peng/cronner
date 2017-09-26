@@ -40,4 +40,6 @@ public class JobConfiguration {
 
     boolean streamingProcess;
 
+    volatile String dependency;
+
 }

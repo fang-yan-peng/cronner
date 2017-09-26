@@ -72,6 +72,11 @@ public class JobServiceImpl implements JobService {
         return jobDao.updateStatus(status,jobName,updateTime);
     }
 
+    @Override
+    public boolean updateSuccessTime(Date successTime, String jobName) {
+        return jobDao.updateSuccessTime(successTime,jobName);
+    }
+
     /**
      *
      * 更新成功时间
@@ -118,5 +123,15 @@ public class JobServiceImpl implements JobService {
     @Override
     public void deleteJob(String jobName) {
         jobDao.deleteJob(jobName);
+    }
+
+    /**
+     * 根据依赖获取作业
+     * @param dependency 被依赖的作业名称
+     * @return 依赖此作业的作业
+     */
+    @Override
+    public List<String> getJobsByDep(String dependency) {
+        return jobDao.getJobsByDep(dependency);
     }
 }

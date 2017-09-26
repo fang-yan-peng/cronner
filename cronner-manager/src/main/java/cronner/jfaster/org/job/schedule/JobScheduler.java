@@ -1,5 +1,6 @@
 package cronner.jfaster.org.job.schedule;
 
+import com.google.common.base.Strings;
 import cronner.jfaster.org.exeception.JobSystemException;
 import cronner.jfaster.org.executor.JobCompleteHandler;
 import cronner.jfaster.org.executor.ScheduleJobFacade;
@@ -57,10 +58,24 @@ public class JobScheduler {
     public void init() {
         JobConfiguration jobConfigFromRegCenter = schedulerFacade.updateJobConfiguration(jobConfig);
         JobRegistry.getInstance().setCurrentShardingTotalCount(jobConfigFromRegCenter.getJobName(), jobConfigFromRegCenter.getShardingTotalCount());
-        JobScheduleController jobScheduleController = new JobScheduleController(createScheduler(), createJobDetail(), jobConfigFromRegCenter.getJobName());
+
+        JobScheduleController jobScheduleController;
+        if(Strings.isNullOrEmpty(jobConfig.getDependency())){
+            jobScheduleController = new JobScheduleController(createScheduler(), createJobDetail(), jobConfigFromRegCenter.getJobName());
+        }else {
+            jobScheduleController = new JobScheduleController(createScheduleJob());
+        }
         JobRegistry.getInstance().registerJob(jobConfigFromRegCenter.getJobName(), jobScheduleController, regCenter);
         schedulerFacade.registerStartUpInfo(true);
         jobScheduleController.scheduleJob(jobConfigFromRegCenter.getCron());
+    }
+
+    private CronnerScheduleJob createScheduleJob(){
+        CronnerScheduleJob scheduleJob = new CronnerScheduleJob();
+        scheduleJob.setJobFacade(jobFacade);
+        scheduleJob.setJobId(jobConfig.getId());
+        scheduleJob.setTaskService(taskService);
+        return scheduleJob;
     }
     
     private JobDetail createJobDetail() {

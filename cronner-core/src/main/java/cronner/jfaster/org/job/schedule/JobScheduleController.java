@@ -1,7 +1,9 @@
 package cronner.jfaster.org.job.schedule;
 
 import cronner.jfaster.org.exeception.JobSystemException;
-import lombok.RequiredArgsConstructor;
+import cronner.jfaster.org.util.executor.ExecuteThreadService;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
 
 import java.util.Date;
@@ -10,14 +12,36 @@ import java.util.Date;
  * 作业调度控制器.
  * @author fangyanpeng
  */
-@RequiredArgsConstructor
+@Slf4j
 public final class JobScheduleController {
     
-    private final Scheduler scheduler;
+    private Scheduler scheduler;
     
-    private final JobDetail jobDetail;
-    
-    private final String triggerIdentity;
+    private JobDetail jobDetail;
+
+    private String triggerIdentity;
+
+    private Job job;
+
+    @Getter
+    private boolean dependency;
+
+    public JobScheduleController(Scheduler scheduler,JobDetail jobDetail,String triggerIdentity){
+        this.scheduler = scheduler;
+        this.jobDetail = jobDetail;
+        this.triggerIdentity = triggerIdentity;
+    }
+
+    public JobScheduleController(Job job){
+        this.job = job;
+        dependency = true;
+    }
+
+    public void executeJob() throws JobExecutionException {
+        if(job != null){
+            job.execute(null);
+        }
+    }
     
     /**
      * 调度作业.
@@ -26,6 +50,9 @@ public final class JobScheduleController {
      */
     public void scheduleJob(final String cron) {
         try {
+            if(dependency){
+                return;
+            }
             if (!scheduler.checkExists(jobDetail.getKey())) {
                 scheduler.scheduleJob(jobDetail, createTrigger(cron));
             }
@@ -42,6 +69,9 @@ public final class JobScheduleController {
      */
     public synchronized void rescheduleJob(final String cron) {
         try {
+            if(dependency){
+                return;
+            }
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(TriggerKey.triggerKey(triggerIdentity));
             if (!scheduler.isShutdown() && null != trigger && !cron.equals(trigger.getCronExpression())) {
                 scheduler.rescheduleJob(TriggerKey.triggerKey(triggerIdentity), createTrigger(cron));
@@ -58,6 +88,9 @@ public final class JobScheduleController {
      */
     public synchronized Date getNextFireTime() {
         try {
+            if(dependency){
+                return null;
+            }
             CronTrigger trigger = (CronTrigger) scheduler.getTrigger(TriggerKey.triggerKey(triggerIdentity));
             return trigger.getNextFireTime();
         } catch (final SchedulerException ex) {
@@ -76,6 +109,9 @@ public final class JobScheduleController {
      */
     public synchronized boolean isPaused() {
         try {
+            if(dependency){
+                return false;
+            }
             return !scheduler.isShutdown() && Trigger.TriggerState.PAUSED == scheduler.getTriggerState(new TriggerKey(triggerIdentity));
         } catch (final SchedulerException ex) {
             throw new JobSystemException(ex);
@@ -87,6 +123,9 @@ public final class JobScheduleController {
      */
     public synchronized void pauseJob() {
         try {
+            if(dependency){
+                return;
+            }
             if (!scheduler.isShutdown()) {
                 scheduler.pauseAll();
             }
@@ -100,6 +139,9 @@ public final class JobScheduleController {
      */
     public synchronized void resumeJob() {
         try {
+            if(dependency){
+                return;
+            }
             if (!scheduler.isShutdown()) {
                 scheduler.resumeAll();
             }
@@ -113,6 +155,21 @@ public final class JobScheduleController {
      */
     public synchronized void triggerJob() {
         try {
+            if(dependency){
+                if(job != null){
+                    ExecuteThreadService.sumbmit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                job.execute(null);
+                            } catch (JobExecutionException e) {
+                                log.error("Trigger job with dependency fail: ",e);
+                            }
+                        }
+                    });
+                }
+                return;
+            }
             if (!scheduler.isShutdown()) {
                 scheduler.triggerJob(jobDetail.getKey());
             }
@@ -126,6 +183,9 @@ public final class JobScheduleController {
      */
     public synchronized void shutdown() {
         try {
+            if(dependency){
+                return;
+            }
             if (!scheduler.isShutdown()) {
                 scheduler.shutdown();
             }

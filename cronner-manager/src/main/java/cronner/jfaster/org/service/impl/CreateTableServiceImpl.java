@@ -57,7 +57,7 @@ public class CreateTableServiceImpl implements CreateTalbleService {
         String dbSchema = "CREATE TABLE IF NOT EXISTS `" + TABLE_JOB + "` ("
                 + "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT, "
                 + "`jobName` VARCHAR(50) NOT NULL, "
-                + "`cron` VARCHAR(20) NOT NULL, "
+                + "`cron` VARCHAR(20) NULL, "
                 + "`shardingTotalCount` INT NOT NULL, "
                 + "`shardingParameter` VARCHAR(100) NOT NULL, "
                 + "`jobParameter` VARCHAR(20) NULL, "
@@ -71,13 +71,15 @@ public class CreateTableServiceImpl implements CreateTalbleService {
                 + "`reconcileIntervalMinutes` INT NOT NULL, "
                 + "`type` INT NOT NULL, "
                 + "`streamingProcess` INT NOT NULL, "
+                + "`dependency` VARCHAR(50) NULL, "
                 + "`createTime` DATETIME NOT NULL, "
                 + "`updateTime` DATETIME NOT NULL, "
                 + "`lastSuccessTime` DATETIME NULL, "
                 + "`nextExecuteTime` DATETIME NULL, "
                 + "PRIMARY KEY (`id`),"
                 + "UNIQUE INDEX unique_index_job_name(`jobName`),"
-                + "INDEX index_create_time(`createTime`)"
+                + "INDEX index_create_time(`createTime`),"
+                + "INDEX index_dependency(`dependency`)"
                 + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
         try (PreparedStatement preparedStatement = conn.prepareStatement(dbSchema)) {
             preparedStatement.execute();

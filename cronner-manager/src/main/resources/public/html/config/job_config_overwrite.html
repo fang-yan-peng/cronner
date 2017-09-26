@@ -23,8 +23,8 @@
                 <th data-field="shardingTotalCount"><span data-lang="job-sharding-total-count"></span></th>
                 <th data-field="status" data-formatter="boolFormatter"><span data-lang="job-status"></span></th>
                 <th data-field="type" data-formatter="typeFormatter"><span data-lang="job-type"></span></th>
-                <th data-field="lastSuccessTime"><span data-lang="last-success-time"></span></th>
-                <th data-field="nextExecuteTime"><span data-lang="next-execute-time"></span></th>
+                <th data-field="lastSuccessTime" data-formatter="timeFormatter"><span data-lang="last-success-time"></span></th>
+                <th data-field="nextExecuteTime" data-formatter="timeFormatter"><span data-lang="next-execute-time"></span></th>
                 <th data-field="operation" data-formatter="generateOperationButtons"><span data-lang="operation"></span></th>
             </tr>
             </thead>
@@ -48,7 +48,11 @@
                     </div>
                     <div class="form-group">
                         <label for="job-cron" class="control-label" data-lang="job-cron"></label>
-                        <input type="text" class="form-control" id="job-cron" name="cron" placeholder="*/5 * * * * ?" required>
+                        <input type="text" class="form-control" id="job-cron" name="cron" placeholder="*/5 * * * * ?">
+                    </div>
+                    <div class="form-group">
+                        <label for="job-dependency" class="control-label" data-lang="job-dependency"></label>
+                        <input type="text" class="form-control" id="job-dependency" name="dependency">
                     </div>
                     <div class="form-group">
                         <label for="job-sharding-total-count" class="control-label" data-lang="job-sharding-total-count"></label>

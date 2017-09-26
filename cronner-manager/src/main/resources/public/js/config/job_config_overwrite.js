@@ -88,6 +88,15 @@ function typeFormatter(value) {
     }
 }
 
+function timeFormatter(value) {
+    if( value == null || value == 0){
+        return "-";
+    }else {
+        return value;
+    }
+}
+
+
 function generateOperationButtons(value, row) {
     var name = row.jobName;
     var modifyButton = "<button operation='modify-job' class='btn-xs btn-primary' job-name='" + name + "' data-lang='operation-update'></button>";
@@ -228,10 +237,10 @@ function bindShutdownButton() {
                 dataType: "json",
                 data: "jobName="+jobName,
                 success: function (data) {
+                    $("#confirm-dialog").modal("hide");
+                    $(".modal-backdrop").remove();
+                    $("body").removeClass("modal-open");
                     if(data.status == 200){
-                        $("#confirm-dialog").modal("hide");
-                        $(".modal-backdrop").remove();
-                        $("body").removeClass("modal-open");
                         $("#job-configs").bootstrapTable("refresh");
                     }else {
                         showFailureDialog(data.err);
@@ -262,6 +271,7 @@ function submitJobConfig() {
         if(bootstrapValidator.isValid()) {
             var jobName = $("#job-name").val();
             var cron = $("#job-cron").val();
+            var dependency = $("#job-dependency").val();
             var shardingTotalCount = $("#job-sharding-total-count").val();
             var shardingParameter = $("#job-sharding-item-parameters").val();
             var jobParameter = $("#job-parameter").val();
@@ -275,7 +285,7 @@ function submitJobConfig() {
             $.ajax({
                 url: "/job/add",
                 type: "PUT",
-                data: JSON.stringify({"jobName": jobName, "cron": cron, "shardingTotalCount": shardingTotalCount, "shardingParameter": shardingParameter, "jobParameter": jobParameter, "failover": failover, "misfire": misfire, "monitorExecution": monitorExecution, "streamingProcess": streamingProcess, "reconcileIntervalMinutes": reconcileIntervalMinutes, "type": type,"allowSendJobEvent":allowSendJobEvent}),
+                data: JSON.stringify({"jobName": jobName, "cron": cron, "dependency": dependency,"shardingTotalCount": shardingTotalCount, "shardingParameter": shardingParameter, "jobParameter": jobParameter, "failover": failover, "misfire": misfire, "monitorExecution": monitorExecution, "streamingProcess": streamingProcess, "reconcileIntervalMinutes": reconcileIntervalMinutes, "type": type,"allowSendJobEvent":allowSendJobEvent}),
                 contentType: "application/json",
                 dataType: "json",
                 success: function(data) {
@@ -296,6 +306,7 @@ function submitJobConfig() {
         }
     });
 }
+
 
 function validate() {
     $("#reg-job-form").bootstrapValidator({
@@ -336,7 +347,7 @@ function validate() {
                     }
                 }
             },
-            cron: {
+            /*cron: {
                 validators: {
                     notEmpty: {
                         message: $.i18n.prop("job-cron-not-null")
@@ -346,7 +357,7 @@ function validate() {
                         message: $.i18n.prop("job-cron-length-limit")
                     }
                 }
-            },
+            },*/
             shardingTotalCount: {
                 validators: {
                     notEmpty: {
@@ -374,10 +385,18 @@ function validate() {
 
 function renderJob(data) {
     $("#job-name-cronner").attr("value", data.jobName);
-    $("#job-type").attr("value", data.type);
-    $("#cron").attr("value", data.cron);
+    var type = data.type;
+    $("#job-type-cronner option[value='"+type+"']").attr("selected", true)
+    var cron = data.cron;
+    if(cron != null && cron != ""){
+        $("#cron").attr("value", data.cron);
+        $("#dependency").attr("disabled",true);
+    }else {
+        $("#dependency").attr("value", data.dependency);
+        $("#cron").attr("disabled",true);
+    }
     $("#sharding-total-count").attr("value", data.shardingTotalCount);
-    $("#job-parameter").attr("value", data.jobParameter);
+    $("#job-parameter-cronner").attr("value", data.jobParameter);
     $("#allow-send-job-event-cronner").attr("checked",data.allowSendJobEvent);
     $("#job-status").attr("checked",data.status);
     $("#reconcile-interval-minutes").attr("value",data.reconcileIntervalMinutes);
@@ -388,8 +407,8 @@ function renderJob(data) {
     $("#sharding-item-parameters").text(data.shardingParameter);
     $("#description").text(data.description);
     $("#create-time").attr("value", data.createTime);
-    $("#last-success-time").attr("value", data.lastSuccessTime);
-    $("#next-execute-time").attr("value", data.nextExecuteTime);
+    $("#last-success-time").attr("value", timeFormatter(data.lastSuccessTime));
+    $("#next-execute-time").attr("value", timeFormatter(data.nextExecuteTime));
 }
 
 

@@ -1,6 +1,5 @@
 package cronner.jfaster.org.service;
 
-import cronner.jfaster.org.model.JobConfiguration;
 import cronner.jfaster.org.pojo.BriefJobConfig;
 import cronner.jfaster.org.pojo.JobConfig;
 
@@ -24,6 +23,8 @@ public interface JobService {
 
     boolean updateStatus(int status, String jobName, Date updateTime);
 
+    boolean updateSuccessTime(Date successTime, String jobName);
+
     boolean updateSuccessTime(Date successTime, Date nextExecTime,String jobName);
 
     List<BriefJobConfig> getJobByPage(String jobName,int start, int pageSize);
@@ -31,4 +32,7 @@ public interface JobService {
     int getJobCnt(String jobName);
 
     void deleteJob(String jobName);
+
+    List<String> getJobsByDep(String dependency);
+
 }

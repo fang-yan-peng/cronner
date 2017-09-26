@@ -18,10 +18,11 @@ function bindSubmitJobSettingsForm() {
         bootstrapValidator.validate();
         if (bootstrapValidator.isValid()) {
             var jobName = $("#job-name-cronner").val();
-            var type = $("#job-type").val();
+            var type = $("#job-type-cronner").val();
             var shardingTotalCount = $("#sharding-total-count").val();
-            var jobParameter = $("#job-parameter").val();
+            var jobParameter = $("#job-parameter-cronner").val();
             var cron = $("#cron").val();
+            var dependency = $("#dependency").val();
             var streamingProcess = $("#streaming-process").prop("checked");
             var monitorExecution = $("#monitor-execution").prop("checked");
             var allowSendJobEvent = $("#allow-send-job-event-cronner").prop("checked");
@@ -30,7 +31,7 @@ function bindSubmitJobSettingsForm() {
             var shardingParameter = $("#sharding-item-parameters").val();
             var description = $("#description").val();
             var reconcileIntervalMinutes = $("#reconcile-interval-minutes").val();
-            var postJson = {"jobName": jobName, "type" : type, "shardingTotalCount": shardingTotalCount, "jobParameter": jobParameter, "cron": cron, "streamingProcess": streamingProcess, "monitorExecution": monitorExecution, "failover": failover, "misfire": misfire, "shardingParameter": shardingParameter, "description": description, "reconcileIntervalMinutes":reconcileIntervalMinutes,"allowSendJobEvent": allowSendJobEvent};
+            var postJson = {"jobName": jobName, "type" : type, "dependency" : dependency, "shardingTotalCount": shardingTotalCount, "jobParameter": jobParameter, "cron": cron, "streamingProcess": streamingProcess, "monitorExecution": monitorExecution, "failover": failover, "misfire": misfire, "shardingParameter": shardingParameter, "description": description, "reconcileIntervalMinutes":reconcileIntervalMinutes,"allowSendJobEvent": allowSendJobEvent};
             showUpdateConfirmModal();
             $(document).off("click", "#confirm-btn");
             $(document).on("click", "#confirm-btn", function() {
@@ -76,7 +77,7 @@ function validate() {
                     }
                 }
             },
-            cron: {
+            /*cron: {
                 validators: {
                     stringLength: {
                         max: 40,
@@ -86,7 +87,7 @@ function validate() {
                         message: $.i18n.prop("job-cron-not-null")
                     }
                 }
-            },
+            },*/
             shardingParameter: {
                 validators: {
                     notEmpty: {

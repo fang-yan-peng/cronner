@@ -12,9 +12,9 @@
                     </div>
                     <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="job-type" class="col-sm-6 control-label" data-lang="job-type"></label>
+                            <label for="job-type-cronner" class="col-sm-6 control-label" data-lang="job-type"></label>
                             <div class="col-sm-6">
-                                <select id="job-type" name="type" class="form-control" data-live-search="false">
+                                <select id="job-type-cronner" name="type" class="form-control" data-live-search="false">
                                     <option value="0">SimpleJob</option>
                                     <option value="1">DataFlow</option>
                                     <option value="2">Script</option>
@@ -50,9 +50,9 @@
                     </div>
                     <div class="col-sm-4">
                         <div class="form-group">
-                            <label for="job-parameter" class="col-sm-6 control-label" data-lang="job-parameter"></label>
+                            <label for="job-parameter-cronner" class="col-sm-6 control-label" data-lang="job-parameter"></label>
                             <div class="col-sm-6">
-                                <input type="text" id="job-parameter" name="jobParameter" class="form-control" data-toggle="tooltip" data-placement="bottom" title="可以配置多个相同的作业，但是用不同的参数作为不同的调度实例" />
+                                <input type="text" id="job-parameter-cronner" name="jobParameter" class="form-control" data-toggle="tooltip" data-placement="bottom" title="可以配置多个相同的作业，但是用不同的参数作为不同的调度实例" />
                             </div>
                         </div>
                     </div>
@@ -111,7 +111,16 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="dependency" class="col-sm-6 control-label" data-lang="job-dependency"></label>
+                            <div class="col-sm-6">
+                                <input type="text" id="dependency" name="dependency" class="form-control" data-toggle="tooltip" data-placement="bottom" title="依赖作业的名称"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="sharding-item-parameters" class="col-sm-2 control-label" data-lang="job-sharding-item-parameters"></label>
                     <div class="col-sm-9">

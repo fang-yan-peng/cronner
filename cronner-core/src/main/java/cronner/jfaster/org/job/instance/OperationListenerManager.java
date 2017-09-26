@@ -51,7 +51,10 @@ public final class OperationListenerManager extends AbstractListenerManager {
             if (!(InstanceOperation.TRIGGER.name().equals(data)
                     || InstanceOperation.PAUSE.name().equals(data)
                     || InstanceOperation.START.name().equals(data)
-                    || InstanceOperation.SHUTDOWN.name().equals(data)) || !operationService.isOperationPath(path) || !(Type.NODE_UPDATED == eventType || Type.NODE_ADDED == eventType)) {
+                    || InstanceOperation.SHUTDOWN.name().equals(data))
+                    || !operationService.isOperationPath(path)
+                    || !(Type.NODE_UPDATED == eventType || Type.NODE_ADDED == eventType)
+                    || JobRegistry.getInstance().isShutdown(jobName)) {
                 return;
             }
             operationService.clearTriggerFlag();

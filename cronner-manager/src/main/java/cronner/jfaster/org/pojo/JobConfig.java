@@ -47,6 +47,8 @@ public class JobConfig {
 
     boolean streamingProcess;
 
+    volatile String dependency;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     Date createTime;
 

@@ -7,6 +7,7 @@ import cronner.jfaster.org.job.election.LeaderService;
 import cronner.jfaster.org.job.guarantee.GuaranteeListenerManager;
 import cronner.jfaster.org.job.instance.OperationListenerManager;
 import cronner.jfaster.org.job.operation.OperationService;
+import cronner.jfaster.org.job.schedule.JobRegistry;
 import cronner.jfaster.org.job.server.ServerService;
 import cronner.jfaster.org.job.sharding.ExecutionService;
 import cronner.jfaster.org.job.sharding.ShardingListenerManager;
@@ -34,13 +35,17 @@ public final class ScheduleListenerManager {
     private final GuaranteeListenerManager guaranteeListenerManager;
 
     private final ShardingListenerManager shardingListenerManager;
-    
+
     public ScheduleListenerManager(final CoordinatorRegistryCenter regCenter, final String jobName, final JobCompleteHandler handler,final LeaderService leaderService,final ShardingService shardingService,final ServerService serverService,final ExecutionService executionService) {
         jobNodeStorage = new JobNodeStorage(regCenter, jobName);
         electionListenerManager = new ElectionListenerManager(jobNodeStorage, jobName,leaderService,serverService);
         triggerListenerManager = new OperationListenerManager(jobNodeStorage, jobName,leaderService,new OperationService(regCenter,jobName));
         guaranteeListenerManager = new GuaranteeListenerManager(jobNodeStorage,jobName,handler);
-        rescheduleListenerManager = new RescheduleListenerManager(jobNodeStorage, jobName);
+        if(JobRegistry.getInstance().getJobScheduleController(jobName)!=null && JobRegistry.getInstance().getJobScheduleController(jobName).isDependency()){
+            rescheduleListenerManager = null;
+        }else {
+            rescheduleListenerManager = new RescheduleListenerManager(jobNodeStorage, jobName);
+        }
         shardingListenerManager = new ShardingListenerManager(jobNodeStorage, jobName,shardingService);
         regCenterConnectionStateListener = new RegistryCenterConnectionStateListener(serverService,shardingService,executionService, jobName);
     }
@@ -51,7 +56,9 @@ public final class ScheduleListenerManager {
     public void startAllListeners() {
         electionListenerManager.start();
         triggerListenerManager.start();
-        rescheduleListenerManager.start();
+        if(rescheduleListenerManager != null){
+            rescheduleListenerManager.start();
+        }
         guaranteeListenerManager.start();
         shardingListenerManager.start();
         jobNodeStorage.addConnectionStateListener(regCenterConnectionStateListener);
