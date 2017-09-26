@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import cronner.jfaster.org.context.ExecutionType;
 import cronner.jfaster.org.event.type.JobExecutionEvent;
 import cronner.jfaster.org.event.type.JobStatusTraceEvent;
-import cronner.jfaster.org.exeception.ExceptionUtil;
 import cronner.jfaster.org.exeception.JobSystemException;
 import cronner.jfaster.org.executor.handler.ExecutorServiceHandler;
 import cronner.jfaster.org.executor.handler.ExecutorServiceHandlerRegistry;
@@ -16,8 +15,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -38,15 +35,14 @@ public abstract class AbstractCronnerJobExecutor {
     private final ExecutorService executorService;
     
     private final JobExceptionHandler jobExceptionHandler;
-    
-    private final Map<Integer, String> itemErrorMessages;
-    
+
+    private boolean error = false;
+
     protected AbstractCronnerJobExecutor(final JobFacade jobFacade) {
         this.jobFacade = jobFacade;
         jobName = jobFacade.getJobName();
         executorService = ExecutorServiceHandlerRegistry.getExecutorServiceHandler(jobName, (ExecutorServiceHandler) getHandler(JobProperties.JobPropertiesEnum.EXECUTOR_SERVICE_HANDLER));
         jobExceptionHandler = (JobExceptionHandler) getHandler(JobProperties.JobPropertiesEnum.JOB_EXCEPTION_HANDLER);
-        itemErrorMessages = new ConcurrentHashMap<>();
     }
     
     private Object getHandler(final JobProperties.JobPropertiesEnum jobPropertiesEnum) {
@@ -118,14 +114,14 @@ public abstract class AbstractCronnerJobExecutor {
         } finally {
             // TODO 考虑增加作业失败的状态，并且考虑如何处理作业失败的整体回路
             jobFacade.registerJobCompleted(shardingContexts);
-            if (itemErrorMessages.isEmpty()) {
+            if (!error) {
                 if (shardingContexts.isAllowSendJobEvent()) {
                     JobStatusTraceEvent event = new JobStatusTraceEvent(jobName,shardingContexts.getTaskId(),executionType, shardingItems, JobStatusTraceEvent.State.TASK_FINISHED,String.format("Sharding item for job '%s' success.", jobName));
                     jobFacade.postJobStatusTraceEvent(event);
                 }
             } else {
                 if (shardingContexts.isAllowSendJobEvent()) {
-                    JobStatusTraceEvent event = new JobStatusTraceEvent(jobName,shardingContexts.getTaskId(),executionType, shardingItems, JobStatusTraceEvent.State.TASK_ERROR,String.format("Sharding item for job '%s' is error , error info: %s", jobName,itemErrorMessages.toString()));
+                    JobStatusTraceEvent event = new JobStatusTraceEvent(jobName,shardingContexts.getTaskId(),executionType, shardingItems, JobStatusTraceEvent.State.TASK_ERROR,String.format("Sharding item for job '%s' is error", jobName));
                     jobFacade.postJobStatusTraceEvent(event);
                 }
             }
@@ -178,12 +174,13 @@ public abstract class AbstractCronnerJobExecutor {
             if (shardingContexts.isAllowSendJobEvent()) {
                 jobFacade.postJobExecutionEvent(completeEvent);
             }
+            error = false;
             // CHECKSTYLE:OFF
         } catch (final Throwable cause) {
             // CHECKSTYLE:ON
+            error = true;
             completeEvent = startEvent.executionFailure(cause);
             jobFacade.postJobExecutionEvent(completeEvent);
-            itemErrorMessages.put(item, ExceptionUtil.transform(cause));
             jobExceptionHandler.handleException(jobName, cause);
         }
     }
