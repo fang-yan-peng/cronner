@@ -50,6 +50,9 @@ public interface JobDao {
     @SQL("update #table set lastSuccessTime=:1 where jobName=:2")
     boolean updateSuccessTime(Date successTime, String jobName);
 
+    @SQL("update #table set nextExecuteTime=:1 where jobName=:2")
+    boolean updateNextTime(Date nextTime,String jobName);
+
     @SQL("select "+SELECT_BRIEF_COLS+" from #table #if(:1!=null && :1!='') where jobName=:1 #end limit :2,:3")
     List<BriefJobConfig> getJobByPage(String jobName,int start, int pageSize);
 

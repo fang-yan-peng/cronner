@@ -25,7 +25,7 @@ public class JobCompleteHandlerImpl implements JobCompleteHandler {
 
 
     @Override
-    public void complete(final String jobName) {
+    public void complete(final String jobName,final boolean fail) {
         try {
             ExecuteThreadService.sumbmit(new Runnable() {
                 @Override
@@ -36,6 +36,12 @@ public class JobCompleteHandlerImpl implements JobCompleteHandler {
                             return;
                         }
                         Date nextFireTime = controller.getNextFireTime();
+                        if(fail){
+                            if(nextFireTime != null){
+                                jobService.updateNextTime(nextFireTime,jobName);
+                            }
+                            return;
+                        }
                         Date successTime = new Date();
                         if(nextFireTime == null){
                             jobService.updateSuccessTime(successTime,jobName);

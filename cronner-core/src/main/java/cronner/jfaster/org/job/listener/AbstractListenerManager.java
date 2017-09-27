@@ -11,7 +11,7 @@ import org.apache.curator.framework.recipes.cache.TreeCacheListener;
  */
 public abstract class AbstractListenerManager {
     
-    private final JobNodeStorage jobNodeStorage;
+    protected final JobNodeStorage jobNodeStorage;
     
     protected AbstractListenerManager(JobNodeStorage jobNodeStorage) {
         this.jobNodeStorage = jobNodeStorage;

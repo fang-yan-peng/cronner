@@ -126,6 +126,17 @@ public class JobServiceImpl implements JobService {
     }
 
     /**
+     * 根据作业名更新下次触发时间
+     * @param nextTime
+     * @param jobName
+     * @return
+     */
+    @Override
+    public boolean updateNextTime(Date nextTime, String jobName) {
+        return jobDao.updateNextTime(nextTime,jobName);
+    }
+
+    /**
      * 根据依赖获取作业
      * @param dependency 被依赖的作业名称
      * @return 依赖此作业的作业

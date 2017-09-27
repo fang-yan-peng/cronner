@@ -37,7 +37,7 @@ public final class GuaranteeListenerManager extends AbstractListenerManager {
         protected void dataChanged(final String path, final Type eventType, final String data) {
             if (Type.NODE_REMOVED == eventType && guaranteeNode.isCompletedRootNode(path)) {
                 //作业运行完成
-                handler.complete(jobName);
+                handler.complete(jobName,jobNodeStorage.isJobNodeExisted(guaranteeNode.COMPLETED_FAIL_FLAG));
             }
         }
     }

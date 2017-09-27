@@ -33,6 +33,8 @@ public interface JobService {
 
     void deleteJob(String jobName);
 
+    boolean updateNextTime(Date nextTime,String jobName);
+
     List<String> getJobsByDep(String dependency);
 
 }

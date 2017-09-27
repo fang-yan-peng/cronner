@@ -10,6 +10,8 @@ import cronner.jfaster.org.executor.handler.ExecutorServiceHandlerRegistry;
 import cronner.jfaster.org.executor.handler.JobExceptionHandler;
 import cronner.jfaster.org.job.api.ShardingContext;
 import cronner.jfaster.org.job.config.JobProperties;
+import cronner.jfaster.org.job.guarantee.GuaranteeService;
+import cronner.jfaster.org.job.schedule.JobRegistry;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,11 +38,14 @@ public abstract class AbstractCronnerJobExecutor {
     
     private final JobExceptionHandler jobExceptionHandler;
 
+    private final GuaranteeService guaranteeService;
+
     private boolean error = false;
 
     protected AbstractCronnerJobExecutor(final JobFacade jobFacade) {
         this.jobFacade = jobFacade;
         jobName = jobFacade.getJobName();
+        guaranteeService = new GuaranteeService(JobRegistry.getInstance().getRegCenter(jobName),jobName);
         executorService = ExecutorServiceHandlerRegistry.getExecutorServiceHandler(jobName, (ExecutorServiceHandler) getHandler(JobProperties.JobPropertiesEnum.EXECUTOR_SERVICE_HANDLER));
         jobExceptionHandler = (JobExceptionHandler) getHandler(JobProperties.JobPropertiesEnum.JOB_EXCEPTION_HANDLER);
     }
@@ -120,6 +125,7 @@ public abstract class AbstractCronnerJobExecutor {
                     jobFacade.postJobStatusTraceEvent(event);
                 }
             } else {
+                guaranteeService.setFailFlag();
                 if (shardingContexts.isAllowSendJobEvent()) {
                     JobStatusTraceEvent event = new JobStatusTraceEvent(jobName,shardingContexts.getTaskId(),executionType, shardingItems, JobStatusTraceEvent.State.TASK_ERROR,String.format("Sharding item for job '%s' is error", jobName));
                     jobFacade.postJobStatusTraceEvent(event);

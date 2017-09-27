@@ -15,15 +15,19 @@ public class JobCompleteDistributeCronnerListener implements CronnerJobListener 
     
     @Override
     public final void beforeJobExecuted(final ShardingContexts shardingContexts) {
-
+        guaranteeService.registerStart(shardingContexts.getShardingItemParameters().keySet());
+        if (guaranteeService.isAllStarted()) {
+            guaranteeService.clearAllStartedInfo();
+            guaranteeService.clearFailFlag();
+        }
     }
     
     @Override
     public final void afterJobExecuted(final ShardingContexts shardingContexts) {
         guaranteeService.registerComplete(shardingContexts.getShardingItemParameters().keySet());
         if (guaranteeService.isAllCompleted()) {
+            guaranteeService.clearAllStartedInfo();
             guaranteeService.clearAllCompletedInfo();
-            return;
         }
     }
 }

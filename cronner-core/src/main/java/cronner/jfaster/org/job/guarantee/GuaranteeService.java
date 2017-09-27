@@ -23,6 +23,49 @@ public final class GuaranteeService {
     }
 
     /**
+     * 根据分片项注册任务开始运行.
+     *
+     * @param shardingItems 待注册的分片项
+     */
+    public void registerStart(final Collection<Integer> shardingItems) {
+        for (int each : shardingItems) {
+            jobNodeStorage.createJobNodeIfNeeded(GuaranteeNode.getStartedNode(each));
+        }
+    }
+
+    /**
+     * 判断是否所有的任务均启动完毕.
+     *
+     * @return 是否所有的任务均启动完毕
+     */
+    public boolean isAllStarted() {
+        return jobNodeStorage.isJobNodeExisted(GuaranteeNode.STARTED_ROOT)
+                && configService.load(false).getShardingTotalCount() == jobNodeStorage.getJobNodeChildrenKeys(GuaranteeNode.STARTED_ROOT).size();
+    }
+
+    /**
+     * 清理所有任务启动信息.
+     */
+    public void clearAllStartedInfo() {
+        jobNodeStorage.removeJobNodeIfExisted(GuaranteeNode.STARTED_ROOT);
+    }
+
+    /**
+     * 设置失败标志位
+     */
+    public void setFailFlag() {
+        jobNodeStorage.createJobNodeIfNeeded(GuaranteeNode.COMPLETED_FAIL_FLAG);
+    }
+
+
+    /**
+     * 清理失败标志位.
+     */
+    public void clearFailFlag() {
+        jobNodeStorage.removeJobNodeIfExisted(GuaranteeNode.COMPLETED_FAIL_FLAG);
+    }
+
+    /**
      * 根据分片项注册任务完成运行.
      *
      * @param shardingItems 待注册的分片项
