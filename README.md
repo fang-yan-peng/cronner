@@ -38,8 +38,6 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
 
     `src/main/java/cronner/jfaster/org/example/job/listener/JobListenerExample.java`
     
-    `src/main/java/cronner/jfaster/org/example/job/SimpeCronnerJobSpringboot.java`
-
     ```java
         package cronner.jfaster.org.example.job.listener;
         
@@ -63,6 +61,8 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
             }
         }
     ```
+
+    `src/main/java/cronner/jfaster/org/example/job/SimpeCronnerJobSpringboot.java`
 
     ```java
         package cronner.jfaster.org.example.job;
@@ -91,6 +91,47 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
         }
 
     ```
+    
+    `src/main/java/cronner/jfaster/org/example/job/DataflowCronnerJobSpring.java`
+
+    ```java
+        package cronner.jfaster.org.example.job;
+        
+        import cronner.jfaster.org.job.annotation.Job;
+        import cronner.jfaster.org.example.job.listener.JobListenerExample;
+        import cronner.jfaster.org.job.api.ShardingContext;
+        import cronner.jfaster.org.job.api.dataflow.DataflowJob;
+        
+        import java.util.Arrays;
+        import java.util.List;
+        import java.util.concurrent.TimeUnit;
+        
+        /**
+         * @author fangyanpeng
+         */
+        @Job(name = "cronner-dataflow-job",listener = JobListenerExample.class)
+        public class DataflowCronnerJobSpring implements DataflowJob<String> {
+        
+            @Override
+            public List<String> fetchData(ShardingContext shardingContext) {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return Arrays.asList("hello","cronner");
+            }
+        
+            @Override
+            public void processData(ShardingContext shardingContext, List<String> data) {
+                System.out.println(String.format("jobName=%s,jobParameter=%s,shardingItem=%s,shardingParameter=%s",shardingContext.getJobName(),shardingContext.getJobParameter(),shardingContext.getShardingItem(),shardingContext.getShardingParameter()));
+                for (String str : data){
+                    System.out.println(str);
+                }
+            }
+        }
+    ```
+
 
 3. 配置yml文件，并启动作业。
 
@@ -157,8 +198,6 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
 
     `src/main/java/cronner/jfaster/org/example/job/listener/JobListenerExample.java`
     
-    `src/main/java/cronner/jfaster/org/example/job/SimpeCronnerJobSpring.java`
-
     ```java
         package cronner.jfaster.org.example.job.listener;
         
@@ -182,7 +221,9 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
             }
         }
     ```
-
+    
+    `src/main/java/cronner/jfaster/org/example/job/SimpeCronnerJobSpring.java`
+    
     ```java
         package cronner.jfaster.org.example.job;
         
@@ -209,6 +250,46 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
             }
         }
 
+    ```
+    
+    `src/main/java/cronner/jfaster/org/example/job/DataflowCronnerJobSpringboot.java`
+
+    ```java
+        package cronner.jfaster.org.example.job;
+        
+        import cronner.jfaster.org.job.annotation.Job;
+        import cronner.jfaster.org.example.job.listener.JobListenerExample;
+        import cronner.jfaster.org.job.api.ShardingContext;
+        import cronner.jfaster.org.job.api.dataflow.DataflowJob;
+        
+        import java.util.Arrays;
+        import java.util.List;
+        import java.util.concurrent.TimeUnit;
+        
+        /**
+         *
+         */
+        @Job(name = "cronner-dataflow-job",listener = JobListenerExample.class)
+        public class DataflowCronnerJobSpringboot implements DataflowJob<String> {
+        
+            @Override
+            public List<String> fetchData(ShardingContext shardingContext) {
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return Arrays.asList("hello","cronner");
+            }
+        
+            @Override
+            public void processData(ShardingContext shardingContext, List<String> data) {
+                System.out.println(String.format("jobName=%s,jobParameter=%s,shardingItem=%s,shardingParameter=%s",shardingContext.getJobName(),shardingContext.getJobParameter(),shardingContext.getShardingItem(),shardingContext.getShardingParameter()));
+                for (String str : data){
+                    System.out.println(str);
+                }
+            }
+        }
     ```
 
 3. 配置xml文件，并启动作业。
@@ -259,9 +340,7 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
             }
         }
     ```
-    执行main方法，就会启动作业，就又启动了一个执行节点。相同的作业名会构成一个执行集群，整个集群节点间进行分片和失效转移等。例如上面启动的两个进程，就构成了一个以cronner-simple-job为标识的作业执行集群。
-
-
+    执行main方法，就会启动作业，就又启动了一个执行节点。相同的作业名会构成一个执行集群，整个集群节点间进行分片和失效转移等。例如上面启动的两个进程，就构成了两个分别以cronner-simple-job和cronner-dataflow-job为标识的作业执行集群。
 
 ## 启动调度节点
 
@@ -297,7 +376,7 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
 * 作业分片总数: 一个作业分几片执行。
 * 分片序列号/参数对照表: 每个分片的序号和参数对照表。
 * 自定义参数: 每个作业可以定义一个自定义参数，作业内部获取到作业参数可以做自己的业务逻辑。
-* 作业类型: 作业的类型SimpleJob、DataFlow、script，程序里都提供了例子。
+* 作业类型: 作业的类型SimpleJob、DataFlow、Script，程序里都提供了例子。
 * 支持自动失效转移: 是否开启失效转移，如果开启，执行节点down机，这台机器上的分片会转移到其它执行节点继续执行。
 * 收集作业执行信息: 是否收集作业的执行信息，如果开启，在后台就可以看到作业的执行情况。
 * 支持错过重执行: 如果作业在调度时，发现上一次的作业还在运行，如果开启该配置，则会等上一次作业运行完，再运行本次任务。适合调度间隔比较大的任务。
