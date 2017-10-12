@@ -1,6 +1,7 @@
 package cronner.jfaster.org.job.schedule;
 
 import com.google.common.base.Optional;
+import cronner.jfaster.org.exeception.JobConfigurationException;
 import cronner.jfaster.org.job.election.LeaderNode;
 import cronner.jfaster.org.job.election.LeaderService;
 import cronner.jfaster.org.job.instance.AbstractInstanceNode;
@@ -97,7 +98,21 @@ public class ScheduleService {
      * 设置调度标志位
      */
     public void setScheduleFlag(){
-        jobNodeStorage.createJobNodeIfNeeded(ScheduleNode.NECESSARY);
+        checkMaxTimeDiffSecondsTolerable();
+        if(leaderService.isLeaderUntilBlock()){ //如果是主节点
+            jobNodeStorage.createJobNodeIfNeeded(ScheduleNode.NECESSARY);
+        }else {
+            //等待2000ms，消除与主节点之间的时间差
+            BlockUtils.waitingShortTime(2000L);
+        }
+    }
+
+    public void checkMaxTimeDiffSecondsTolerable() {
+        long timeDiff = Math.abs(System.currentTimeMillis() - jobNodeStorage.getRegistryCenterTime());
+        if (timeDiff > 1000L) {
+            throw new JobConfigurationException(
+                    "Time different between job server and register center exceed '%s' ms, max time different is 1000 ms.", timeDiff);
+        }
     }
 
     /**

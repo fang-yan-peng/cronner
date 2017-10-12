@@ -14,6 +14,10 @@ public final class BlockUtils {
     public static void waitingShortTime() {
         sleep(100L);
     }
+
+    public static void waitingShortTime(long time) {
+        sleep(time);
+    }
     
     public static void sleep(final long millis) {
         try {
