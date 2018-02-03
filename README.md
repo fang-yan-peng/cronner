@@ -321,24 +321,27 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
        </beans>
    ```
 
-    `src/main/java/cronner/jfaster/org/example/CronnerSpringBootMain.java`
+    `src/main/java/cronner/jfaster/org/example/CronnerSpringMain.java`
 
     ```java
         package cronner.jfaster.org.example;
         
-        import org.springframework.boot.SpringApplication;
-        import org.springframework.boot.autoconfigure.SpringBootApplication;
-        import org.springframework.context.ConfigurableApplicationContext;
+        import org.springframework.context.support.ClassPathXmlApplicationContext;
+        
+        import java.util.concurrent.CountDownLatch;
         
         /**
          * @author fangyanpeng
          */
-        @SpringBootApplication
-        public class CronnerSpringBootMain {
-            public static void main(String[] args) {
-                ConfigurableApplicationContext context = SpringApplication.run(CronnerSpringBootMain.class,args);
+        public class CronnerSpringMain {
+            public static void main(String[] args) throws InterruptedException {
+                ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext("classpath*:job.xml");
+                ctx.start();
+                CountDownLatch latch = new CountDownLatch(1);
+                latch.await();
             }
         }
+
     ```
     执行main方法，就会启动作业，就又启动了一个执行节点。相同的作业名会构成一个执行集群，整个集群节点间进行分片和失效转移等。例如上面启动的两个进程，就构成了两个分别以cronner-simple-job和cronner-dataflow-job为标识的作业执行集群。
 
