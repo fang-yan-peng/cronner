@@ -25,6 +25,7 @@ import org.springframework.core.type.ClassMetadata;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -59,7 +60,8 @@ public class CronnerBeanFactoryPostProcessor implements BeanFactoryPostProcessor
                     AnnotationMetadata annotationMD = reader.getAnnotationMetadata();
                     if (annotationMD.hasAnnotation(Job.class.getName())) {
                         ClassMetadata clazzMD = reader.getClassMetadata();
-                        Class<?> jobClass = Class.forName(clazzMD.getClassName());
+                        //Class<?> jobClass = Class.forName(clazzMD.getClassName());
+                        Class<?> jobClass = ClassUtils.getDefaultClassLoader().loadClass(clazzMD.getClassName());
                         if(!DataflowJob.class.isAssignableFrom(jobClass) && !SimpleJob.class.isAssignableFrom(jobClass) && !ScriptJob.class.isAssignableFrom(jobClass)){
                             throw new JobConfigurationException("registried job should not be a implement of DataflowJob, SimpleJob or ScriptJob");
                         }
