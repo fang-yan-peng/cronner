@@ -27,7 +27,7 @@
         <java.version>1.7</java.version>
         <hikaricp.version>2.6.3</hikaricp.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
-        <mysql-connector-java.version>5.1.30</mysql-connector-java.version>
+        <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
     </properties>
 
     <dependencies>
