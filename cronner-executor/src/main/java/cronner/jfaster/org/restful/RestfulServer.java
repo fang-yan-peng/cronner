@@ -2,6 +2,7 @@ package cronner.jfaster.org.restful;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
+import com.sun.jersey.api.core.ClasspathResourceConfig;
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 import lombok.extern.slf4j.Slf4j;
@@ -86,8 +87,8 @@ public final class RestfulServer {
     
     private ServletHolder getServletHolder(final String packages) {
         ServletHolder result = new ServletHolder(ServletContainer.class);
-        result.setInitParameter(PackagesResourceConfig.PROPERTY_PACKAGES, Joiner.on(",").join(RestfulServer.class.getPackage().getName(), packages));
-        result.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", PackagesResourceConfig.class.getName());
+        result.setInitParameter(ClasspathResourceConfig.PROPERTY_CLASSPATH, Joiner.on(",").join(RestfulServer.class.getPackage().getName(), packages));
+        result.setInitParameter("com.sun.jersey.config.property.resourceConfigClass", ClasspathResourceConfig.class.getName());
         result.setInitParameter("com.sun.jersey.api.json.POJOMappingFeature", Boolean.TRUE.toString());
         result.setInitParameter("resteasy.scan.providers", Boolean.TRUE.toString());
         result.setInitParameter("resteasy.use.builtin.providers", Boolean.FALSE.toString());
