@@ -78,6 +78,21 @@
                 </configuration>
                 <version>${maven-compiler-plugin.version}</version>
             </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>cronner.jfaster.org.example.CronnerSpringBootMain</mainClass>
+                    <fork>true</fork>
+                    <executable>true</executable>
+                    <requiresUnpack>
+                        <dependency>
+                            <groupId>org.jfaster.cronner</groupId>
+                            <artifactId>cronner-executor</artifactId>
+                        </dependency>
+                    </requiresUnpack>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
