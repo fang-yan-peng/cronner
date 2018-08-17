@@ -19,6 +19,22 @@ Cronner 是一个分布式定时任务框架，支持作业依赖、作业分片
 
 ## SpringBoot 例子
 
+以java -jar的方式启动需要配置插件
+```xml
+    <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+            <requiresUnpack>
+                <dependency>
+                    <groupId>org.jfaster.cronner</groupId>
+                    <artifactId>cronner-executor</artifactId>
+                </dependency>
+            </requiresUnpack>
+        </configuration>
+    </plugin>
+   ```
+
 1. 添加依赖.
 
    ```xml
